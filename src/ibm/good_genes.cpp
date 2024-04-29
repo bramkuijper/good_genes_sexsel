@@ -37,9 +37,9 @@ void GoodGenes::reproduction()
 {
     update_survival_distribution();
 
-    int female_idx,male_idx;
+    long unsigned female_idx,male_idx;
 
-    std::vector<Individual> nextgen;
+    std::vector<Individual> nextgen{};
 
     for (unsigned newborn_idx{0}; newborn_idx < par.n; ++newborn_idx)
     {
@@ -207,8 +207,8 @@ void GoodGenes::phenotypes()
 // choose surviving male according to its ornament 
 unsigned GoodGenes::choose(Individual const &female)
 {
-    std::vector <double> male_fitness;
-    std::vector <unsigned> male_idxs;
+    std::vector <double> male_fitness{};
+    std::vector <unsigned> male_idxs{};
 
     // distribution to sample males from
     std::uniform_int_distribution<unsigned> 

@@ -17,7 +17,7 @@ class Parameters
 
         double a{1.0};
         double b{0.0025};
-        double c{0.5};
+        double c{0.01};
 
         unsigned choice_sample_size{10};
 
