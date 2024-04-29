@@ -2,6 +2,7 @@
 #include <stdexcept>
 #include <vector>
 #include <cmath>
+#include <iostream>
 #include "good_genes.hpp"
 #include "parameters.hpp"
 
@@ -237,6 +238,7 @@ unsigned GoodGenes::choose(Individual const &female)
         
         male_idxs.push_back(sampled_male_idx);
         male_fitness.push_back(fitness);
+
     }
 
     // now make distribution of the fitnesses to choose from

@@ -15,14 +15,14 @@ class Parameters
         double max_mut_v{0.8};
         double biasv{0.5};
 
-        double a{1.0};
+        double a{4.0};
         double b{0.0025};
         double c{0.01};
 
         unsigned choice_sample_size{10};
 
-        double init_t{0.0};
-        double init_p{1.0};
+        double init_t{0.5};
+        double init_p{2.0};
         double init_v{5.0};
         double v_opt{10.0};
 
