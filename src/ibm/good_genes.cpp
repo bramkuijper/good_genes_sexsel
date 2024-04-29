@@ -15,12 +15,22 @@ GoodGenes::GoodGenes(Parameters const &params) :
     males(par.n/2,Individual(par)),
     females(par.n/2,Individual(par))
 {
+    write_data_headers();
+
     for (time_step = 0; 
-            time_step < par.max_num_gen; ++time_step)
+            time_step <= par.max_num_gen; ++time_step)
     {
         phenotypes();
         reproduction();
+
+        if (time_step % par.numoutgen == 0)
+        {
+            write_data();
+        }
     }
+
+    write_parameters();
+
 } // end GoodGenes() constructor
 
 void GoodGenes::reproduction()
@@ -69,6 +79,32 @@ void GoodGenes::reproduction()
     }
 } // end reproduction
 
+void GoodGenes::write_parameters()
+{
+    data_file 
+        << std::endl 
+        << std::endl
+        << "seed;" << seed << ";" << std::endl
+        << "n;" << par.n << ";" << std::endl
+        << "mu_p;" << par.mu_p << ";" << std::endl
+        << "mu_t;" << par.mu_t << ";" << std::endl
+        << "mu_v;" << par.mu_v << ";" << std::endl
+        << "max_mut_p;" << par.max_mut_p << ";" << std::endl
+        << "max_mut_t;" << par.max_mut_t << ";" << std::endl
+        << "max_mut_v;" << par.max_mut_v << ";" << std::endl
+        << "biasv;" << par.biasv << ";" << std::endl
+        << "a;" << par.a << ";" << std::endl
+        << "b;" << par.b << ";" << std::endl
+        << "c;" << par.c << ";" << std::endl
+        << "choice_sample_size;" << par.choice_sample_size << ";" << std::endl
+        << "init_t;" << par.init_t << ";" << std::endl
+        << "init_p;" << par.init_p << ";" << std::endl
+        << "init_v;" << par.init_v << ";" << std::endl
+        << "v_opt;" << par.v_opt << ";" << std::endl
+        << "max_num_gen;" << par.max_num_gen << ";" << std::endl
+        << "numoutgen;" << par.numoutgen << ";" << std::endl;
+}
+
 void GoodGenes::write_data()
 {
     double meanp{0.0};
@@ -80,10 +116,13 @@ void GoodGenes::write_data()
     double meanx{0.0};
     double ssx{0.0};
 
-    data_file << time_step << ";";
 
-    unsigned nf{females.size()};
-    unsigned nm{males.size()};
+    // keep track of population sizes
+    unsigned long nf{females.size()};
+    unsigned long nm{males.size()};
+
+    // aux variables to store trait values
+    double p,t,v,x;
 
     for (auto female_iter{females.begin()};
             female_iter != females.end();
@@ -118,15 +157,15 @@ void GoodGenes::write_data()
         meanv += v;
         ssv += v*v;
         
-        x = male_iter->x[0] + male_iter->x[1];
+        x = male_iter->x;
         meanx += x;
         ssx += x*x;
     }
 
 
-    meanp /= (nf + nm)
-    meant /= (nf + nm)
-    meanv /= (nf + nm)
+    meanp /= (nf + nm);
+    meant /= (nf + nm);
+    meanv /= (nf + nm);
     meanx /= nm;
     
     double varp = ssp / (nf + nm) - meanp * meanp;
@@ -144,12 +183,12 @@ void GoodGenes::write_data()
         << varv << ";"
         << varx << ";"
         << nf << ";"
-        << nm << ";";
+        << nm << ";" << std::endl;
 } // write_data()
 
-void write_data_headers()
+void GoodGenes::write_data_headers()
 {
-
+    data_file << "generation;meanp;meant;meanv;meanx;varp;vart;varv;varx;nf;nm;" << std::endl;
 }
 void GoodGenes::phenotypes()
 {

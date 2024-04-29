@@ -6,3 +6,7 @@ CXXFLAGS=-Wall -O3 -std=c++20
 
 $(EXE) : $(CPP) $(HPP)
 	$(CXX) $(CXXFLAGS) -o $(EXE) $(CPP) 
+
+
+clean :
+	rm -rf $(EXE)

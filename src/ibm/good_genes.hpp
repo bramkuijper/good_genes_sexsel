@@ -33,6 +33,8 @@ class GoodGenes
         unsigned choose(Individual const &female);
 
         void write_data();
+        void write_data_headers();
+        void write_parameters();
 
     public:
         GoodGenes(Parameters const &parameters);
