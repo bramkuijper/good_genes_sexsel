@@ -11,6 +11,11 @@ class Individual
         double p[2]{0.0,0.0};
         double v[2]{0.0,0.0};
 
+        // realized ornament
+        double x;
+
+        // male survival prob
+
         // standard constructor
         Individual(Parameters const &param);
 
@@ -23,7 +28,7 @@ class Individual
                 std::mt19937 &rng_r,
                 Parameters const &params);
 
-        void operator=();
+        void operator=(Individual const &other);
 };
 
 #endif 

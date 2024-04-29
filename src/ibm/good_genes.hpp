@@ -19,6 +19,7 @@ class GoodGenes
         unsigned seed;
         std::mt19937 rng_r;
 
+        unsigned time_step{0};
 
 
         std::discrete_distribution<unsigned> survival_distribution{1,1};
@@ -28,7 +29,10 @@ class GoodGenes
 
         void update_survival_distribution();
         void reproduction();
-        void choose();
+        void phenotypes();
+        unsigned choose(Individual const &female);
+
+        void write_data();
 
     public:
         GoodGenes(Parameters const &parameters);
