@@ -42,19 +42,19 @@ Individual::Individual(
         {
             incr = uniform(rng_r) * params.max_mut_p;
 
-            p[allele_idx] = p[allele_idx] + uniform(rng_r) < 0.5 ? -incr : incr;
+            p[allele_idx] = p[allele_idx] + (uniform(rng_r) < 0.5 ? -incr : incr);
         }
 
         if (uniform(rng_r) < params.mu_t)
         {
             incr = uniform(rng_r) * params.max_mut_t;
-            t[allele_idx] = t[allele_idx] + uniform(rng_r) < 0.5 ? -incr : incr;
+            t[allele_idx] = t[allele_idx] + (uniform(rng_r) < 0.5 ? -incr : incr);
         }
         
         if (uniform(rng_r) < params.mu_v)
         {
             incr = uniform(rng_r) * params.max_mut_v;
-            v[allele_idx] = v[allele_idx] + uniform(rng_r) < params.biasv ? -incr : incr;
+            v[allele_idx] = v[allele_idx] + (uniform(rng_r) < params.biasv ? -incr : incr);
         }
     } // end for allele_idx
 } // end Individual()

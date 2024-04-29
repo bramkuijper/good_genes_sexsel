@@ -26,6 +26,7 @@ GoodGenes::GoodGenes(Parameters const &params) :
 
         if (time_step % par.numoutgen == 0)
         {
+            std::cout << time_step << std::endl;
             write_data();
         }
     }
@@ -129,15 +130,15 @@ void GoodGenes::write_data()
             female_iter != females.end();
             ++female_iter)
     {
-        p = female_iter->p[0] + female_iter->p[1];
+        p = 0.5 * (female_iter->p[0] + female_iter->p[1]);
         meanp += p;
         ssp += p*p;
         
-        t = female_iter->t[0] + female_iter->t[1];
+        t = 0.5 * (female_iter->t[0] + female_iter->t[1]);
         meant += t;
         sst += t*t;
 
-        v = female_iter->v[0] + female_iter->v[1];
+        v = 0.5 * (female_iter->v[0] + female_iter->v[1]);
         meanv += v;
         ssv += v*v;
     }
@@ -146,15 +147,15 @@ void GoodGenes::write_data()
             male_iter != males.end();
             ++male_iter)
     {
-        p = male_iter->p[0] + male_iter->p[1];
+        p = 0.5 * (male_iter->p[0] + male_iter->p[1]);
         meanp += p;
         ssp += p*p;
         
-        t = male_iter->t[0] + male_iter->t[1];
+        t = 0.5 * (male_iter->t[0] + male_iter->t[1]);
         meant += t;
         sst += t*t;
 
-        v = male_iter->v[0] + male_iter->v[1];
+        v = 0.5 * (male_iter->v[0] + male_iter->v[1]);
         meanv += v;
         ssv += v*v;
         
@@ -198,10 +199,10 @@ void GoodGenes::phenotypes()
             male_iter != males.end();
             ++male_iter)
     {
-        t = male_iter->t[0] + male_iter->t[1];
-        v = male_iter->v[0] + male_iter->v[1];
+        t = 0.5 * (male_iter->t[0] + male_iter->t[1]);
+        v = 0.5 * (male_iter->v[0] + male_iter->v[1]);
 
-        male_iter->x = t * std::exp(-abs(par.v_opt - v));
+        male_iter->x = t * std::exp(-std::fabs(par.v_opt - v));
     }
 } // end phenotypes()
 
@@ -219,7 +220,7 @@ unsigned GoodGenes::choose(Individual const &female)
     
     double fitness;
 
-    double p = female.p[0] + female.p[1];
+    double p = 0.5 * (female.p[0] + female.p[1]);
 
     double x,v,survival_odds;
 
@@ -230,9 +231,9 @@ unsigned GoodGenes::choose(Individual const &female)
         sampled_male_idx = male_sampler(rng_r);
 
         x = males[sampled_male_idx].x;
-        v = males[sampled_male_idx].v[0] + males[sampled_male_idx].v[1];
+        v = 0.5 * (males[sampled_male_idx].v[0] + males[sampled_male_idx].v[1]);
 
-        survival_odds = std::exp(-par.c * x * x - abs(par.v_opt - v));
+        survival_odds = std::exp(-par.c * x * x - std::fabs(par.v_opt - v));
 
         fitness = survival_odds * std::exp(par.a * p * x);
         
@@ -265,13 +266,15 @@ void GoodGenes::update_survival_distribution()
             ++female_iter
             )
     {
-        p = female_iter->p[0] + female_iter->p[1];
-        v = female_iter->v[0] + female_iter->v[1];
+        p = 0.5 * (female_iter->p[0] + female_iter->p[1]);
+        v = 0.5 * (female_iter->v[0] + female_iter->v[1]);
 
-        surv = std::exp(-par.b * p * p - abs(par.v_opt - v));
+        surv = std::exp(-par.b * p * p - std::fabs(par.v_opt - v)) ;
 
         female_survival.push_back(surv);
     }
+
+    assert(female_survival.size() == females.size());
 
     // param object to override the current fecundity distribution
     // that is associated to the patch
