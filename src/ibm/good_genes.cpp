@@ -243,7 +243,9 @@ unsigned GoodGenes::choose(Individual const &female)
     std::discrete_distribution<unsigned> choose_male(male_fitness.begin(),
             male_fitness.end());
 
-    return(choose_male(rng_r));
+    unsigned the_chosen_male = male_idxs[choose_male(rng_r)];
+
+    return(the_chosen_male);
 } // choose()
 
 
