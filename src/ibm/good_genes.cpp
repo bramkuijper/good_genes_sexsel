@@ -235,7 +235,7 @@ unsigned GoodGenes::choose(Individual const &female)
         fitness = survival_odds * std::exp(par.a * p * x);
         
         male_idxs.push_back(sample_idx);
-        male_fitness.push_back(sample_idx);
+        male_fitness.push_back(fitness);
     }
 
     // now make distribution of the fitnesses to choose from
@@ -263,7 +263,7 @@ void GoodGenes::update_survival_distribution()
         p = female_iter->p[0] + female_iter->p[1];
         v = female_iter->v[0] + female_iter->v[1];
 
-        surv = std::exp(-par.b * p*p - abs(par.v_opt - v));
+        surv = std::exp(-par.b * p * p - abs(par.v_opt - v));
 
         female_survival.push_back(surv);
     }
