@@ -214,27 +214,28 @@ unsigned GoodGenes::choose(Individual const &female)
     std::uniform_int_distribution<unsigned> 
         male_sampler(0, males.size() - 1);
 
-    unsigned sample_idx;
+    unsigned sampled_male_idx;
     
     double fitness;
 
     double p = female.p[0] + female.p[1];
 
     double x,v,survival_odds;
-    for (unsigned sample_idx{0}; 
-            sample_idx < par.choice_sample_size; 
-            ++sample_idx)
-    {
-        sample_idx = male_sampler(rng_r);
 
-        x = males[sample_idx].x;
-        v = males[sample_idx].v[0] + males[sample_idx].v[1];
+    for (unsigned inspected_male_idx{0}; 
+            inspected_male_idx < par.choice_sample_size; 
+            ++inspected_male_idx)
+    {
+        sampled_male_idx = male_sampler(rng_r);
+
+        x = males[inspected_male_idx].x;
+        v = males[inspected_male_idx].v[0] + males[inspected_male_idx].v[1];
 
         survival_odds = std::exp(-par.c * x * x - abs(par.v_opt - v));
 
         fitness = survival_odds * std::exp(par.a * p * x);
         
-        male_idxs.push_back(sample_idx);
+        male_idxs.push_back(sampled_male_idx);
         male_fitness.push_back(fitness);
     }
 
