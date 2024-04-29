@@ -228,8 +228,8 @@ unsigned GoodGenes::choose(Individual const &female)
     {
         sampled_male_idx = male_sampler(rng_r);
 
-        x = males[inspected_male_idx].x;
-        v = males[inspected_male_idx].v[0] + males[inspected_male_idx].v[1];
+        x = males[sampled_male_idx].x;
+        v = males[sampled_male_idx].v[0] + males[sampled_male_idx].v[1];
 
         survival_odds = std::exp(-par.c * x * x - abs(par.v_opt - v));
 
