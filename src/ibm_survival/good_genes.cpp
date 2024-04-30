@@ -26,7 +26,6 @@ GoodGenes::GoodGenes(Parameters const &params) :
 
         if (time_step % par.numoutgen == 0)
         {
-            std::cout << time_step << std::endl;
             write_data();
         }
     }

@@ -1,9 +1,8 @@
 #!/usr/bin/env Rscript
 
 #biasv=c(0.5,0.6,0.7,0.8,0.9,0.99)
-biasv = c(0.5,0.9) #c(0.5, 0.9, 0.99)
-
-nrep = 3
+biasv = c(seq(0.5,0.9,0.1),0.99)
+nrep = 5
 
 maxgen = 10000
 
