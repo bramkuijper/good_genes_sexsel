@@ -16,4 +16,4 @@ ggplot(data = the_data_l
     ylab("Trait value")
 
 
-ggsave(filename="overview.pdf",width=5,height=5)
+ggsave(filename="overview.pdf",width=5,height=5,device = cairo_pdf)
