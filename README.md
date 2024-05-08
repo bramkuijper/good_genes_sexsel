@@ -33,7 +33,7 @@ There should now be an executable named `good_genes.exe` in this folder. However
 ### Generate a shell file to run the simulation
 The programme `good_genes.exe` requires a few command line parameters (you can add more by modifying the code in `main.cpp` and subsequently recompiling). 
 
-To generate all permutations of these command line parameters, I have created a standalone `R` script `vary_parameters.r`. The code below outputs a permutation and writes it to a file `batch_file.sh`:
+To generate all permutations of these command line parameters, I have created a standalone `R` script `vary_parameters.r`. This script generates all permutations of parameters and then creates a `bash` shell command to run simulations for each permutation. The script `vary_parameters.r` writes these commands to the bash file `batch_file.sh`:
 
 ```
 ./vary_parameters.r > batch_file.sh
@@ -49,7 +49,7 @@ Once you have a `batch_file.sh` with instructions to run the code, you can simpl
 bash batch_file.sh
 ```
 
-after which each command in the file will be run sequentially.
+after which each command in the file `batch_file.sh` will be run sequentially.
 
 ### Modifying the code to add different parameters etc
 If you would like to add more permutations of different parameters that are present in `parameters.cpp`, you will need to change both `vary_parameters.r` (to add your parameter of choice to the permuation generating code, which is a simple `for` loop) as well as `main.cpp` to have the simulation overwrite the defaults via the contents of the corresponding `argv` array.
