@@ -118,6 +118,11 @@ void GoodGenes::write_data()
     double meanx{0.0};
     double ssx{0.0};
 
+    // cross products for covariances
+    double stv{0.0};
+    double stp{0.0};
+    double spv{0.0};
+
 
     // keep track of population sizes
     unsigned long nf{females.size()};
@@ -141,6 +146,10 @@ void GoodGenes::write_data()
         v = 0.5 * (female_iter->v[0] + female_iter->v[1]);
         meanv += v;
         ssv += v*v;
+        
+        stp += t * p;
+        spv += p * v;
+        stv += t * v;
     }
     
     for (auto male_iter{males.begin()};
@@ -162,6 +171,10 @@ void GoodGenes::write_data()
         x = male_iter->x;
         meanx += x;
         ssx += x*x;
+        
+        stp += t * p;
+        spv += p * v;
+        stv += t * v;
     }
 
 
@@ -175,6 +188,10 @@ void GoodGenes::write_data()
     double varv = ssv / (nf + nm) - meanv * meanv;
     double varx = ssx / nm - meanx * meanx;
 
+    double covtp = stp / (nf + nm) - meant * meanp;
+    double covtv = stv / (nf + nm) - meant * meanv;
+    double covpv = spv / (nf + nm) - meanp * meanv;
+
     data_file << time_step << ";"
         << meanp << ";"
         << meant << ";"
@@ -184,13 +201,16 @@ void GoodGenes::write_data()
         << vart << ";"
         << varv << ";"
         << varx << ";"
+        << covtp << ";"
+        << covtv << ";"
+        << covpv << ";"
         << nf << ";"
         << nm << ";" << std::endl;
 } // write_data()
 
 void GoodGenes::write_data_headers()
 {
-    data_file << "generation;meanp;meant;meanv;meanx;varp;vart;varv;varx;nf;nm;" << std::endl;
+    data_file << "generation;meanp;meant;meanv;meanx;varp;vart;varv;varx;covtp;covtv;covpv;nf;nm;" << std::endl;
 }
 void GoodGenes::phenotypes()
 {
@@ -252,7 +272,7 @@ unsigned GoodGenes::choose(Individual const &female)
 } // choose()
 
 
-
+// update the survival distribution of females and males
 void GoodGenes::update_survival_distribution()
 {
     std::vector<double> female_survival{}; 
@@ -276,8 +296,7 @@ void GoodGenes::update_survival_distribution()
 
     assert(female_survival.size() == females.size());
 
-    // param object to override the current fecundity distribution
-    // that is associated to the patch
+    // param object to update the current fecundity distribution
     std::discrete_distribution<unsigned>::param_type 
         survival_distribution_param(
                 female_survival.begin()

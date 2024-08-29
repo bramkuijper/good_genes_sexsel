@@ -18,11 +18,15 @@ GoodGenes::GoodGenes(Parameters const &params) :
 {
     write_data_headers();
 
+    // set phenotypes for the first generation
+    phenotypes();
+
     for (time_step = 0; 
             time_step <= par.max_num_gen; ++time_step)
     {
         survival();
         reproduction();
+        phenotypes();
 
         if (time_step % par.numoutgen == 0)
         {
@@ -34,6 +38,20 @@ GoodGenes::GoodGenes(Parameters const &params) :
 
 } // end GoodGenes() constructor
 
+
+void GoodGenes::phenotypes()
+{
+    double t,v;
+
+    for (auto male_iter{males.begin()}; male_iter != males.end(); ++male_iter)
+    {
+        t = 0.5 * (male_iter->t[0] + male_iter->t[1]);
+        v = 0.5 * (male_iter->v[0] + male_iter->v[1]);
+
+        male_iter->x = t * std::exp(-std::fabs(par.v_opt - v));
+    }
+}
+
 void GoodGenes::survival()
 {
     // aux variables to store trait values
@@ -42,6 +60,7 @@ void GoodGenes::survival()
     unsigned nm = males.size();
     unsigned nf = females.size();
 
+    // initialize survival probabilities
     mean_p_survive_f = 0.0;
     mean_p_survive_m = 0.0;
     
@@ -52,6 +71,7 @@ void GoodGenes::survival()
 
         surv = std::exp(-par.b * p * p - std::fabs(par.v_opt - v)) ;
 
+        // update survival prob
         mean_p_survive_f += surv;
 
         // individual dies
@@ -67,14 +87,13 @@ void GoodGenes::survival()
         }
     } // end for females
 
-    double t,x;
+    double x;
 
     for (auto male_iter{males.begin()}; male_iter != males.end(); )
     {
-        t = 0.5 * (male_iter->t[0] + male_iter->t[1]);
         v = 0.5 * (male_iter->v[0] + male_iter->v[1]);
 
-        x = male_iter->x = t * std::exp(-std::fabs(par.v_opt - v));
+        x = male_iter->x;
 
         surv = std::exp(-par.c * x * x - std::fabs(par.v_opt - v)) ;
         
@@ -180,6 +199,11 @@ void GoodGenes::write_data()
     double ssv{0.0};
     double meanx{0.0};
     double ssx{0.0};
+    
+    //  covariances
+    double stv{0.0};
+    double stp{0.0};
+    double spv{0.0};
 
 
     // keep track of population sizes
@@ -204,6 +228,10 @@ void GoodGenes::write_data()
         v = 0.5 * (female_iter->v[0] + female_iter->v[1]);
         meanv += v;
         ssv += v*v;
+
+        stp += t * p;
+        spv += p * v;
+        stv += t * v;
     }
     
     for (auto male_iter{males.begin()};
@@ -225,6 +253,10 @@ void GoodGenes::write_data()
         x = male_iter->x;
         meanx += x;
         ssx += x*x;
+        
+        stp += t * p;
+        spv += p * v;
+        stv += t * v;
     }
 
 
@@ -238,6 +270,10 @@ void GoodGenes::write_data()
     double varv = ssv / (nf + nm) - meanv * meanv;
     double varx = ssx / nm - meanx * meanx;
 
+    double covtp = stp / (nf + nm) - meant * meanp;
+    double covtv = stv / (nf + nm) - meant * meanv;
+    double covpv = spv / (nf + nm) - meanp * meanv;
+
     data_file << time_step << ";"
         << meanp << ";"
         << meant << ";"
@@ -247,15 +283,19 @@ void GoodGenes::write_data()
         << vart << ";"
         << varv << ";"
         << varx << ";"
+        << covtp << ";"
+        << covtv << ";"
+        << covpv << ";"
         << mean_p_survive_f << ";"
         << mean_p_survive_m << ";"
         << nf << ";"
         << nm << ";" << std::endl;
+
 } // write_data()
 
 void GoodGenes::write_data_headers()
 {
-    data_file << "generation;meanp;meant;meanv;meanx;varp;vart;varv;varx;surv_f;surv_m;nf;nm;" << std::endl;
+    data_file << "generation;meanp;meant;meanv;meanx;varp;vart;varv;varx;covtp;covtv;covpv;surv_f;surv_m;nf;nm;" << std::endl;
 }
 
 // choose surviving male according to its ornament 
