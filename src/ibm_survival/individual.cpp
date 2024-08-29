@@ -1,3 +1,4 @@
+#include <cmath>
 #include "individual.hpp"
 #include "parameters.hpp"
 
@@ -6,7 +7,7 @@ Individual::Individual(Parameters const &params) :
     t{params.init_t, params.init_t},
     p{params.init_p, params.init_p},
     v{params.init_v, params.init_v},
-    x{0.0}
+    x{params.init_t * std::exp(-std::fabs(params.v_opt - params.init_v))}
 {
 }
 
@@ -22,7 +23,8 @@ Individual::Individual(
                 Individual const &mother,
                 Individual const &father,
                 std::mt19937 &rng_r,
-                Parameters const &params)
+                Parameters const &params) :
+    x{0.0}
 {
     std::bernoulli_distribution segregator{0.5};
     std::uniform_real_distribution<double> uniform{0.0,1.0};
@@ -69,4 +71,6 @@ void Individual::operator=(Individual const &other)
         t[allele_idx] = other.t[allele_idx];
         v[allele_idx] = other.v[allele_idx];
     }
+
+    x = other.x;
 }//end operator=

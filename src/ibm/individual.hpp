@@ -12,7 +12,7 @@ class Individual
         double v[2]{0.0,0.0};
 
         // realized ornament
-        double x;
+        double x{0.0};
 
         // male survival prob
 

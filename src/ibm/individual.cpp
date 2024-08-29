@@ -12,7 +12,8 @@ Individual::Individual(Parameters const &params) :
 Individual::Individual(Individual const &other) :
     t{other.t[0], other.t[1]},
     p{other.p[0], other.p[1]},
-    v{other.v[0], other.v[1]}
+    v{other.v[0], other.v[1]},
+    x{other.x}
 {}
 
 
@@ -67,4 +68,6 @@ void Individual::operator=(Individual const &other)
         t[allele_idx] = other.t[allele_idx];
         v[allele_idx] = other.v[allele_idx];
     }
+     
+    x = other.x;
 }//end operator=

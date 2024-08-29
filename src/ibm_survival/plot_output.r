@@ -59,6 +59,10 @@ jsonstuff <- '[
     {
         "xvar" : "generation",
         "yvar" : ["surv_f","surv_m"]
+    },
+    {
+        "xvar" : "generation",
+        "yvar" : ["covtp","covtv","covpv"]
     }
 ]
 '
