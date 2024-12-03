@@ -4,7 +4,7 @@ library("patchwork")
 the_data <- read_delim("summary.csv",delim=";")
 
 the_data_l <- pivot_longer(the_data
-                           ,cols=c(meant,meanp)
+                           ,cols=c(meant1,meanp1)
                            ,names_to = "trait"
                            ,values_to = "trait_value")
 

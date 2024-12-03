@@ -6,16 +6,19 @@
 #include "good_genes.hpp"
 #include "parameters.hpp"
 
+// the constructor, which initializes 
+// and then runs the whole simulation
 GoodGenes::GoodGenes(Parameters const &params) :
-    par{params},
-    data_file{par.file_name},
-    uniform{0.0,1.0},
-    rd{},
-    seed{rd()},
-    rng_r{seed},
-    males(par.n/2,Individual(par)),
-    females(par.n/2,Individual(par))
+    par{params}, // initialize the parameter object
+    data_file{par.file_name}, // start the output file
+    uniform{0.0,1.0}, // initialize a standard uniform distribution
+    rd{}, // rd() generates the seed fed to the random number generator
+    seed{rd()}, // save the seed
+    rng_r{seed}, // initialize the random number generator
+    males(par.n/2,Individual(par)), // initialize males
+    females(par.n/2,Individual(par)) // initialize females
 {
+    // add headers to the data file
     write_data_headers();
 
     // set phenotypes for the first generation
