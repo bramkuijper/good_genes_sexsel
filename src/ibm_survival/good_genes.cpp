@@ -27,21 +27,29 @@ GoodGenes::GoodGenes(Parameters const &params) :
     for (time_step = 0; 
             time_step <= par.max_num_gen; ++time_step)
     {
+
+        // individuals survive...
         survival();
+
+        // ... then reproduce
         reproduction();
+
+        // then next generation expresses its phenotypes (x)
         phenotypes();
 
+        // write data to file ever nth timestep
         if (time_step % par.numoutgen == 0)
         {
             write_data();
         }
     }
 
+    // finally write parameters to output file
     write_parameters();
 
 } // end GoodGenes() constructor
 
-
+// express phenotypes 
 void GoodGenes::phenotypes()
 {
     double t,v;

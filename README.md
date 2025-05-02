@@ -56,5 +56,15 @@ If you would like to add more permutations of different parameters that are pres
 
 Don't forget to re-run `make` once you have accommodated for additional command line parameters in `main.cpp`.
 
+### Parameters for a 'standard' case
 
-
+What parameters work well to get exaggeration of `t` and `p` for biased mutations (i.e., `biast`>0.5)? 
+```
+a = 1
+b = 0.0025
+c = 0.5
+biast in c(0.9,0.95,0.99)
+mu_t, mu_p, mu_v = 0.05
+max_mu_t, max_mu_p = 0.4
+max_mu_v = 0.8
+```
