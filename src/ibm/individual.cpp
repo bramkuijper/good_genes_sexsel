@@ -45,7 +45,7 @@ Individual::Individual(
 
             p[allele_idx] = p[allele_idx] + (uniform(rng_r) < 0.5 ? -incr : incr);
             
-            if (p[allele_idx] < 0.0)
+            if (params.only_positive && p[allele_idx] < 0.0)
             {
                 p[allele_idx] = 0.0;
             }
@@ -56,7 +56,7 @@ Individual::Individual(
             incr = uniform(rng_r) * params.max_mut_t;
             t[allele_idx] = t[allele_idx] + (uniform(rng_r) < 0.5 ? -incr : incr);
 
-            if (t[allele_idx] < 0.0)
+            if (params.only_positive && t[allele_idx] < 0.0)
             {
                 t[allele_idx] = 0.0;
             }

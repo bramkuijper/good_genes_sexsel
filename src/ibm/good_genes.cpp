@@ -102,6 +102,7 @@ void GoodGenes::write_parameters()
         << "init_p;" << par.init_p << ";" << std::endl
         << "init_v;" << par.init_v << ";" << std::endl
         << "v_opt;" << par.v_opt << ";" << std::endl
+        << "only_positive;" << par.only_positive << ";" << std::endl
         << "max_num_gen;" << par.max_num_gen << ";" << std::endl
         << "numoutgen;" << par.numoutgen << ";" << std::endl;
 }

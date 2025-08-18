@@ -29,6 +29,8 @@ class Parameters
         unsigned max_num_gen{1000};
         unsigned numoutgen{10};
 
+        bool only_positive{false};
+
         std::string file_name{"sim_good_genes"};
 };
 #endif
