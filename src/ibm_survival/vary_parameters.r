@@ -4,7 +4,7 @@ biasv = c(0.5, 0.6, 0.7, 0.9, 0.99)
 
 nrep = 20
 
-maxgen = 20000
+maxgen = 50000
 
 
 # generate a date_time stamp as a character
@@ -29,35 +29,48 @@ init_t <- 0.0
 init_p <- 1.0
 init_v <- 5.0
 
+max_mut <- c(0.05,0.1,0.2,0.3)
+
+max_mut_v <- 0.8
+
 only_positive <- T
 
-for (rep_i in 1:nrep)
+for (max_mut_i in max_mut)
 {
-    for (biasv_i in biasv)
+    for (rep_i in 1:nrep)
     {
-        counter <- counter + 1
-        file_name_i <- paste0(output_file_prefix,"_",counter)
+        for (biasv_i in biasv)
+        {
+            counter <- counter + 1
+            file_name_i <- paste0(output_file_prefix,"_",counter)
 
-        echo_str <- paste("echo",counter)
+            echo_str <- paste("echo",counter)
 
-        command_str <- paste(exe,
-                        biasv_i,
-                        a,
-                        b,
-                        c,
-                        init_t,
-                        init_p,
-                        init_v,
-                        format(maxgen,scientific=F),
-                        as.numeric(only_positive),
-                        file_name_i)
+            max_mut_t <- max_mut_i
+            max_mut_p <- max_mut_i
 
-        # append to batch file contents
-        batch_file_contents <- paste0(batch_file_contents
-                ,"\n"
-                ,echo_str
-                ,"\n"
-                ,command_str)
+            command_str <- paste(exe,
+                            biasv_i,
+                            a,
+                            b,
+                            c,
+                            init_t,
+                            init_p,
+                            init_v,
+                            max_mut_t,
+                            max_mut_p,
+                            max_mut_v,
+                            format(maxgen,scientific=F),
+                            as.numeric(only_positive),
+                            file_name_i)
+
+            # append to batch file contents
+            batch_file_contents <- paste0(batch_file_contents
+                    ,"\n"
+                    ,echo_str
+                    ,"\n"
+                    ,command_str)
+        }
     }
 }
 
