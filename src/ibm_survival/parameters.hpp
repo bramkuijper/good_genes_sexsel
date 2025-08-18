@@ -53,5 +53,9 @@ class Parameters
 
         // file name
         std::string file_name{"sim_good_genes"};
+
+        // whether values of t, p can only be positive (
+        // or strictly speaking, nonnegative)
+        bool only_positive{false};
 };
 #endif

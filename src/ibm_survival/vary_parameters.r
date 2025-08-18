@@ -1,10 +1,10 @@
 #!/usr/bin/env Rscript
 
-#biasv=c(0.5,0.6,0.7,0.8,0.9,0.99)
-biasv = c(seq(0.5,0.9,0.1),0.99)
-nrep =20 
+biasv = c(0.5, 0.6, 0.7, 0.9, 0.99)
 
-maxgen = 10000
+nrep = 20
+
+maxgen = 20000
 
 
 # generate a date_time stamp as a character
@@ -21,6 +21,16 @@ exe = "./good_genes.exe"
 
 batch_file_contents <- ""
 
+a <- 1.0
+b <- 0.0025
+c <- 0.5
+
+init_t <- 0.0
+init_p <- 1.0
+init_v <- 5.0
+
+only_positive <- T
+
 for (rep_i in 1:nrep)
 {
     for (biasv_i in biasv)
@@ -32,7 +42,14 @@ for (rep_i in 1:nrep)
 
         command_str <- paste(exe,
                         biasv_i,
+                        a,
+                        b,
+                        c,
+                        init_t,
+                        init_p,
+                        init_v,
                         format(maxgen,scientific=F),
+                        as.numeric(only_positive),
                         file_name_i)
 
         # append to batch file contents

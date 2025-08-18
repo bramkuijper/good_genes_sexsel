@@ -180,6 +180,7 @@ void GoodGenes::write_parameters()
         << std::endl 
         << std::endl
         << "seed;" << seed << ";" << std::endl
+        << "type;" << "good_genes_survival" << ";" << std::endl
         << "n;" << par.n << ";" << std::endl
         << "mu_p;" << par.mu_p << ";" << std::endl
         << "mu_t;" << par.mu_t << ";" << std::endl
@@ -196,6 +197,7 @@ void GoodGenes::write_parameters()
         << "init_p;" << par.init_p << ";" << std::endl
         << "init_v;" << par.init_v << ";" << std::endl
         << "v_opt;" << par.v_opt << ";" << std::endl
+        << "only_positive;" << par.only_positive << ";" << std::endl
         << "max_num_gen;" << par.max_num_gen << ";" << std::endl
         << "numoutgen;" << par.numoutgen << ";" << std::endl;
 }
