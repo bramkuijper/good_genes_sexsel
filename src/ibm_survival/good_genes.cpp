@@ -13,11 +13,15 @@ GoodGenes::GoodGenes(Parameters const &params) :
     data_file{par.file_name}, // start the output file
     uniform{0.0,1.0}, // initialize a standard uniform distribution
     rd{}, // rd() generates the seed fed to the random number generator
-    seed{rd()}, // save the seed
+    seed{2023996906}, // save the seed
     rng_r{seed}, // initialize the random number generator
     males(par.n/2,Individual(par)), // initialize males
     females(par.n/2,Individual(par)) // initialize females
 {
+
+    // finally write parameters to output file
+    write_parameters();
+
     // add headers to the data file
     write_data_headers();
 
@@ -44,9 +48,6 @@ GoodGenes::GoodGenes(Parameters const &params) :
         }
     }
 
-    // finally write parameters to output file
-    write_parameters();
-
 } // end GoodGenes() constructor
 
 // express phenotypes 
@@ -68,8 +69,8 @@ void GoodGenes::survival()
     // aux variables to store trait values
     double p,v,surv;
 
-    unsigned nm = males.size();
-    unsigned nf = females.size();
+    unsigned nm = static_cast<unsigned>(males.size());
+    unsigned nf = static_cast<unsigned>(females.size());
 
     // initialize survival probabilities
     mean_p_survive_f = 0.0;
@@ -134,7 +135,14 @@ void GoodGenes::reproduction()
 
     std::vector<Individual> nextgen{};
 
-    std::uniform_int_distribution<unsigned> female_sampler(0, females.size() - 1);
+    std::uniform_int_distribution<unsigned> 
+        female_sampler(0, static_cast<unsigned>(females.size() - 1));
+
+    if (females.size() < 1 || males.size() < 1)
+    {
+        write_parameters();
+        exit(1);
+    }
 
     for (unsigned newborn_idx{0}; newborn_idx < par.n; ++newborn_idx)
     {
@@ -319,7 +327,7 @@ unsigned GoodGenes::choose(Individual const &female)
 
     // distribution to sample males from
     std::uniform_int_distribution<unsigned> 
-        male_sampler(0, males.size() - 1);
+        male_sampler(0, static_cast<unsigned>(males.size() - 1));
 
     unsigned sampled_male_idx;
     

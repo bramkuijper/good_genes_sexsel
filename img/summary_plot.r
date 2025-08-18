@@ -2,7 +2,7 @@ library("tidyverse")
 library("patchwork")
 
 #the_data <- read_delim("summary_good_genes_multivar.csv",delim=";")
-the_data <- read_delim("summary_goodgenes_nonneg.csv",delim=";")
+the_data <- read_delim("summary_goodgenes_nonneg_mutation.csv",delim=";")
 
 the_data_l <- pivot_longer(the_data
                            ,cols=c(meant,meanp)
@@ -12,11 +12,12 @@ the_data_l <- pivot_longer(the_data
 p1 <- ggplot(data = the_data_l
        ,mapping = aes(x = biasv, y = trait_value)) +
        geom_hline(yintercept=0) +
-    geom_point(mapping=aes(colour=trait)) +
+    geom_point(mapping=aes(colour=trait),alpha=0.5) +
     scale_colour_brewer(palette="Set1") +
     theme_classic() +
     xlab("Probability of biased mutations on viability trait") +
-    ylab("Trait value")
+    ylab("Trait value") +
+    facet_grid(~max_mut_p)
 
 p2 <- ggplot(data = the_data_l
        ,mapping = aes(x = biasv, y = abs(trait_value))) +
@@ -24,9 +25,10 @@ p2 <- ggplot(data = the_data_l
     scale_colour_brewer(palette="Set1") +
     theme_classic() +
     xlab("Probability of biased mutations on viability trait") +
-    ylab("Absolute trait value")
+    ylab("Absolute trait value") +
+    facet_grid(~max_mut_p)
 
-p1 | p2
+p1 / p2
 
 
 ggsave(filename="overview.pdf",width=12,height=5,device = cairo_pdf)

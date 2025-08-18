@@ -16,7 +16,7 @@ int main(int argc, char **argv)
     parameters.max_mut_t = std::stod(argv[8]);
     parameters.max_mut_p = std::stod(argv[9]);
     parameters.max_mut_v = std::stod(argv[10]);
-    parameters.max_num_gen = std::stoi(argv[11]);
+    parameters.max_num_gen = static_cast<unsigned>(std::stoi(argv[11]));
     parameters.only_positive = std::stoi(argv[12]);
     parameters.file_name = argv[13];
 
