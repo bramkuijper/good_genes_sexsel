@@ -13,7 +13,7 @@ GoodGenes::GoodGenes(Parameters const &params) :
     data_file{par.file_name}, // start the output file
     uniform{0.0,1.0}, // initialize a standard uniform distribution
     rd{}, // rd() generates the seed fed to the random number generator
-    seed{2023996906}, // save the seed
+    seed{rd()}, // save the seed
     rng_r{seed}, // initialize the random number generator
     males(par.n/2,Individual(par)), // initialize males
     females(par.n/2,Individual(par)) // initialize females

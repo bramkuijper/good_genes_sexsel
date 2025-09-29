@@ -1,6 +1,6 @@
 #!/usr/bin/env Rscript
 
-biasv = c(0.99) #c(0.5, 0.6, 0.7, 0.9, 0.99)
+biasv = c(0.5, 0.6, 0.7, 0.9, 0.99)
 
 nrep = 20
 
@@ -29,11 +29,11 @@ init_t <- 0.0
 init_p <- 1.0
 init_v <- 5.0
 
-max_mut <- c(0.3) #c(0.05,0.1,0.2,0.3)
+max_mut <- c(0.4) #c(0.05,0.1,0.2,0.3)
 
 max_mut_v <- 0.8
 
-only_positive <- T
+only_positive <- F
 
 for (max_mut_i in max_mut)
 {
