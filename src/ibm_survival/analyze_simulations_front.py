@@ -12,7 +12,7 @@ def analyze_parameters(lines,first=False):
     pars = {}
 
     for line in lines:
-        mobj = re.match("(.*);(.*)",line)
+        mobj = re.match("(.*);(.*);",line)
         if mobj != None:
             pars[mobj.group(1)] = mobj.group(2)
 
@@ -50,7 +50,7 @@ def analyze_file(filename):
 
     # first see until what line the parameters stretch
     for idx, line_i in enumerate(fl):
-        if re.match("^time",line_i) != None:
+        if re.match("^generation",line_i) != None:
             endline = idx
             break
 
@@ -65,7 +65,7 @@ def analyze_file(filename):
 
     # check whether simulation actually returned output
     # otherwise skip it
-    if re.match("^\d.*",fl[-1]) == None:
+    if re.match(r"^\d.*",fl[-1]) == None:
         return
     
     if first:

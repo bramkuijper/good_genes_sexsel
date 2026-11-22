@@ -1,8 +1,14 @@
 library("tidyverse")
 library("patchwork")
 
-#the_data <- read_delim("summary_good_genes_multivar.csv",delim=";")
-the_data <- read_delim("summary_goodgenes_nonneg_mutation.csv",delim=";")
+#the_data <- read_delim("summary_good_genes.csv",delim=";")
+#the_data <- read_delim("summary_goodgenes_nonneg_mutation.csv",delim=";")
+the_file <- "summary_good_genes_bias_no_bias.csv"
+the_file_no_ext <- tools::file_path_sans_ext(the_file)
+
+the_data <- read_delim(the_file,delim=";")
+
+
 
 the_data_l <- pivot_longer(the_data
                            ,cols=c(meant,meanp)
@@ -16,8 +22,7 @@ p1 <- ggplot(data = the_data_l
     scale_colour_brewer(palette="Set1") +
     theme_classic() +
     xlab("Probability of biased mutations on viability trait") +
-    ylab("Trait value") +
-    facet_grid(~max_mut_p)
+    ylab("Trait value") 
 
 p2 <- ggplot(data = the_data_l
        ,mapping = aes(x = biasv, y = abs(trait_value))) +
@@ -25,13 +30,12 @@ p2 <- ggplot(data = the_data_l
     scale_colour_brewer(palette="Set1") +
     theme_classic() +
     xlab("Probability of biased mutations on viability trait") +
-    ylab("Absolute trait value") +
-    facet_grid(~max_mut_p)
+    ylab("Absolute trait value") 
 
-p1 / p2
+p1 | p2
 
 
-ggsave(filename="overview.pdf",width=12,height=5,device = cairo_pdf)
+ggsave(filename=paste0(the_file_no_ext,"_","overview.pdf"),width=12,height=5,device = cairo_pdf)
 
 the_data_l <- pivot_longer(the_data
                            ,cols=c(covtp,covtv,covpv)
@@ -46,4 +50,4 @@ ggplot(data = the_data_l
     xlab("Probability of biased mutations on viability trait") +
     ylab("covariance")
 
-ggsave(filename="overview_covariances.pdf",width=12,height=5,device = cairo_pdf)
+ggsave(filename=paste0(the_file_no_ext,"_","overview_covariances.pdf"),width=12,height=5,device = cairo_pdf)
