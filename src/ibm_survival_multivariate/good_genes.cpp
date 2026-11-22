@@ -234,7 +234,7 @@ void GoodGenes::write_parameters()
         << "theta;" << par.theta << ";" << std::endl
         << "gamma;" << par.gamma << ";" << std::endl
         << "k;" << par.k << ";" << std::endl
-        << "weber_k" << par.weber_k << ";" << std::endl
+        << "weber_k;" << par.weber_k << ";" << std::endl
         << "choice_sample_size;" << par.choice_sample_size << ";" << std::endl
         << "init_t;" << par.init_t << ";" << std::endl
         << "init_p;" << par.init_p << ";" << std::endl
@@ -247,6 +247,7 @@ void GoodGenes::write_parameters()
 
 void GoodGenes::write_data()
 {
+
     std::vector <double> meanp(par.ntraits, 0.0);
     std::vector <double> ssp(par.ntraits, 0.0);
     std::vector <double> meant(par.ntraits, 0.0);
@@ -269,6 +270,8 @@ void GoodGenes::write_data()
     double p,t,v,x;
 
     double nf_plus_nm = static_cast<double>(nf + nm);
+    
+    data_file << time_step << ";";
 
     for (auto female_iter{females.begin()};
             female_iter != females.end();
@@ -389,8 +392,7 @@ void GoodGenes::write_data_headers()
             << "varx" << (trait_idx + 1) << ";"
             << "covt" << (trait_idx + 1) << "p" << (trait_idx + 1) << ";"
             << "covt" << (trait_idx + 1) << "v;" 
-            << "covp" << (trait_idx + 1) << "v;" 
-            << std::endl;
+            << "covp" << (trait_idx + 1) << "v;";
     }
 
     data_file << "meanv;varv;p_surv_f;p_surv_m;nfsurv;nmsurv;nf;nm;" << std::endl;
@@ -426,6 +428,8 @@ unsigned GoodGenes::choose(Individual const &female)
             ++inspected_male_idx)
     {
         sampled_male_idx = male_sampler(rng_r);
+
+        sum_fitness = 0.0;
 
         for (unsigned trait_idx{0}; trait_idx < par.ntraits; ++trait_idx)
         {

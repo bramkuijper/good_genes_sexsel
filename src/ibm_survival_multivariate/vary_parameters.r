@@ -1,6 +1,6 @@
 #!/usr/bin/env Rscript
 
-biasv = c(0.55, 0.65, 0.75,0.8,0.85, 0.95)
+biasv = c(0.5, 0.95)
 
 nrep = 20
 
@@ -24,6 +24,11 @@ batch_file_contents <- ""
 a <- 1.0
 b <- 0.0025
 c <- 0.5
+k <- 0.0
+weber_k <- 0.0
+gamma <- 2.0
+theta <- 1.0 / gamma
+ntraits <- 2
 
 init_t <- 0.0
 init_p <- 1.0
@@ -54,6 +59,10 @@ for (max_mut_i in max_mut)
                             a,
                             b,
                             c,
+                            theta,
+                            gamma,
+                            k,
+                            weber_k,
                             init_t,
                             init_p,
                             init_v,
@@ -62,6 +71,7 @@ for (max_mut_i in max_mut)
                             max_mut_v,
                             format(maxgen,scientific=F),
                             as.numeric(only_positive),
+                            ntraits,
                             file_name_i)
 
             # append to batch file contents
