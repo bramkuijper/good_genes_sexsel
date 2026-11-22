@@ -119,7 +119,7 @@ void GoodGenes::survival()
         }
     } // end for females
 
-    nfsurv = females.size();
+    nfsurv = static_cast<unsigned>(females.size());
 
     for (auto male_iter{males.begin()}; male_iter != males.end(); )
     {
@@ -150,7 +150,7 @@ void GoodGenes::survival()
         }
     }
 
-    nmsurv = males.size();
+    nmsurv = static_cast<unsigned>(males.size());
 
     mean_p_survive_f /= nf;
     mean_p_survive_m /= nm;
@@ -268,6 +268,8 @@ void GoodGenes::write_data()
     // aux variables to store trait values
     double p,t,v,x;
 
+    double nf_plus_nm = static_cast<double>(nf + nm);
+
     for (auto female_iter{females.begin()};
             female_iter != females.end();
             ++female_iter)
@@ -325,26 +327,26 @@ void GoodGenes::write_data()
     for (unsigned trait_idx{0}; 
             trait_idx < par.ntraits; ++trait_idx)
     {
-        meanp[trait_idx] /= (nf + nm);
-        meant[trait_idx] /= (nf + nm);
-        meanx[trait_idx] /= nm;
+        meanp[trait_idx] /= nf_plus_nm;
+        meant[trait_idx] /= nf_plus_nm;
+        meanx[trait_idx] /= static_cast<double>(nm);
     
-        double varp = ssp[trait_idx] / (nm + nf) - 
+        double varp = ssp[trait_idx] / nf_plus_nm - 
             meanp[trait_idx] * meanp[trait_idx];
 
-        double vart = sst[trait_idx] / (nm + nf) - 
+        double vart = sst[trait_idx] / nf_plus_nm - 
             meant[trait_idx] * meant[trait_idx];
 
-        double varx = ssx[trait_idx] / nm - 
+        double varx = ssx[trait_idx] / static_cast<double>(nm) - 
             meanx[trait_idx] * meanx[trait_idx];
     
-        double covtp = stp[trait_idx] / (nf + nm) - 
+        double covtp = stp[trait_idx] / nf_plus_nm - 
             meant[trait_idx] * meanp[trait_idx];
         
-        double covtv = stv[trait_idx] / (nf + nm) - 
+        double covtv = stv[trait_idx] / nf_plus_nm - 
             meant[trait_idx] * meanv;
 
-        double covpv = spv[trait_idx] / (nf + nm) - 
+        double covpv = spv[trait_idx] / nf_plus_nm - 
             meanp[trait_idx] * meanv;
 
         data_file << meanp[trait_idx] << ";"
@@ -358,8 +360,8 @@ void GoodGenes::write_data()
             << covpv << ";";
     }
 
-    meanv /= (nf + nm);
-    double varv = ssv / (nf + nm) - meanv * meanv;
+    meanv /= nf_plus_nm;
+    double varv = ssv / nf_plus_nm - meanv * meanv;
     
 
     data_file << meanv << ";"
