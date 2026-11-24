@@ -1,6 +1,5 @@
 #!/usr/bin/env Rscript
 
-biasv = c(0.55, 0.65, 0.75,0.8,0.85, 0.95)
 
 nrep = 20
 
@@ -29,6 +28,7 @@ init_t <- 0.0
 init_p <- 1.0
 init_v <- 5.0
 
+biasv = c(0.5, 0.98)
 max_mut <- c(0.4) #c(0.05,0.1,0.2,0.3)
 
 max_mut_v <- 0.8

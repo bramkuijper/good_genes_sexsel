@@ -12,7 +12,7 @@ def analyze_parameters(lines,first=False):
     pars = {}
 
     for line in lines:
-        mobj = re.match("(.*);(.*)",line)
+        mobj = re.match("(.*);(.*);",line)
         if mobj != None:
             pars[mobj.group(1)] = mobj.group(2)
 
@@ -24,13 +24,12 @@ def analyze_data(lines):
 
     # loop through the lines to collect the data
     for line in lines[1:]:
-        splitline = line.split(";")[0:-1]
+        splitline = line.split(";")[0:11]
 
         for i in range(0,len(splitline)):
             data[i].append(float(splitline[i]))
 
     # now take averages
-
     avgs = []
     for i in range(0,len(data)):
         avgs.append(sum(data[i])/len(data[i]))
@@ -50,7 +49,7 @@ def analyze_file(filename):
 
     # first see until what line the parameters stretch
     for idx, line_i in enumerate(fl):
-        if re.match("^time",line_i) != None:
+        if re.match("^generation;",line_i) != None:
             endline = idx
             break
 
