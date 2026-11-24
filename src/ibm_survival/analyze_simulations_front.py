@@ -49,7 +49,7 @@ def analyze_file(filename):
 
     # first see until what line the parameters stretch
     for idx, line_i in enumerate(fl):
-        if re.match("^generation;",line_i) != None:
+        if re.match("^generation",line_i) != None:
             endline = idx
             break
 
@@ -64,7 +64,7 @@ def analyze_file(filename):
 
     # check whether simulation actually returned output
     # otherwise skip it
-    if re.match("^\d.*",fl[-1]) == None:
+    if re.match(r"^\d.*",fl[-1]) == None:
         return
     
     if first:
