@@ -36,36 +36,6 @@ transform.sym  <- function(x)
     }
 }
 
-jsonstuff <- '[
-    {"xvar" : "generation",
-        "yvar" : ["meanp","meant"]
-    },
-    {
-        "xvar" : "generation",
-        "yvar" : "meanv"
-    },
-    {
-        "xvar" : "generation",
-        "yvar" : "meanx"
-    },
-    {
-        "xvar" : "generation",
-        "yvar" : ["varp","vart","varv"]
-    },
-    {
-        "xvar" : "generation",
-        "yvar" : ["nf","nm"]
-    },
-    {
-        "xvar" : "generation",
-        "yvar" : ["surv_f","surv_m"]
-    },
-    {
-        "xvar" : "generation",
-        "yvar" : ["covtp","covtv","covpv"]
-    }
-]
-'
 
 if (!exists("file.name"))
 {
@@ -101,6 +71,55 @@ data.tibble.params <- read_delim(file=file.name
 params <- data.tibble.params %>% pivot_wider(
         names_from = name
         ,values_from = value)
+
+names_p <- grep(x = names(data.tibble),
+        pattern = "^meanp",
+        value = T)
+
+names_t <- grep(x = names(data.tibble),
+        pattern = "^meant",
+        value = T)
+
+names_x <- grep(x = names(data.tibble),
+        pattern = "^meant",
+        value = T)
+
+# now make the structure of the plot
+jsonstuff_start <- '[
+    {"xvar" : "generation",
+        "yvar" : ["'
+
+
+
+
+        meanp","meant"]
+    },
+    {
+        "xvar" : "generation",
+        "yvar" : "meanv"
+    },
+    {
+        "xvar" : "generation",
+        "yvar" : "meanx"
+    },
+    {
+        "xvar" : "generation",
+        "yvar" : ["varp","vart","varv"]
+    },
+    {
+        "xvar" : "generation",
+        "yvar" : ["nf","nm"]
+    },
+    {
+        "xvar" : "generation",
+        "yvar" : ["surv_f","surv_m"]
+    },
+    {
+        "xvar" : "generation",
+        "yvar" : ["covtp","covtv","covpv"]
+    }
+]
+'
 
 plot.structure <- fromJSON(jsonstuff, simplifyVector = F)
 
