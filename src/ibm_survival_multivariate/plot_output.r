@@ -17,15 +17,17 @@ find.params <- function(filename) {
 
     f <- readLines(filename)
 
-    seq.rev <- rev(seq(1,length(f),1))
+    seq <- seq(1,length(f),1)
 
-    for (line_i in seq.rev)
+    for (line_i in seq)
     {
         if (length(grep("^\\d",f[[line_i]])) > 0)
         {
-            return(line_i)
+            return(line_i - 1)
         }
     }
+
+    return(NA)
 }
 # use tidyverse's sym() to transform strings to symbols 
 transform.sym  <- function(x) 
@@ -36,6 +38,7 @@ transform.sym  <- function(x)
     }
 }
 
+file.name <- "sim_good_genes_24112026_112907_99"
 
 if (!exists("file.name"))
 {
@@ -57,13 +60,13 @@ param.line <- find.params(file.name)
 
 data.tibble <- read_delim(file=file.name
         ,delim=";"
-        ,n_max=param.line-1
+        ,skip=param.line-1
         ,col_names=T)
 
 # get the parameters
 data.tibble.params <- read_delim(file=file.name
         ,delim=";"
-        ,skip=param.line
+        ,n_max=param.line-3
         ,col_names=c("name","value")
         )
 
@@ -72,39 +75,102 @@ params <- data.tibble.params %>% pivot_wider(
         names_from = name
         ,values_from = value)
 
-names_p <- grep(x = names(data.tibble),
-        pattern = "^meanp",
+##### column names for anything involving p #####
+
+names_p <- grep(
+        x = names(data.tibble),
+        pattern = "^meanp.*",
         value = T)
+
+names_p_str <- paste(names_p, collapse='","')
+
+names_var_p <- grep(x = names(data.tibble),
+        pattern = "^varp.*",
+        value = T)
+
+names_var_p_str <- paste(names_var_p, collapse='","')
+##### column names for anything involving t #####
 
 names_t <- grep(x = names(data.tibble),
-        pattern = "^meant",
+        pattern = "^meant.*",
         value = T)
+
+names_t_str <- paste(names_t, collapse='","')
+
+names_var_t <- grep(x = names(data.tibble),
+        pattern = "^vart.*",
+        value = T)
+
+names_var_t_str <- paste(names_var_t, collapse='","')
+
+##### column names for anything involving x #####
 
 names_x <- grep(x = names(data.tibble),
-        pattern = "^meant",
+        pattern = "^meanx.*",
         value = T)
 
+names_x_str <- paste(names_x, collapse='","')
+
+names_var_x <- grep(x = names(data.tibble),
+        pattern = "^varx.*",
+        value = T)
+
+names_var_x_str <- paste(names_var_x, collapse='","')
+
+
+##### covariances #####
+
+### cov p_i x v
+cov_pv_names <- grep(x = names(data.tibble),
+        pattern = "covp\\d+",
+        value = T)
+
+cov_pv_names_str <- paste(cov_pv_names, collapse = '","')
+
+### cov t_i x p_i
+
+cov_tp_names <- grep(x = names(data.tibble),
+        pattern = "covt\\d+p\\d+",
+        value = T)
+
+cov_tp_names_str <- paste(cov_tp_names, collapse = '","')
+
+### cov t_i x v
+
+cov_tv_names <- grep(x = names(data.tibble),
+        pattern = "covt\\d+v",
+        value = T)
+
+cov_tv_names_str <- paste(cov_tv_names, collapse = '","')
+
+
 # now make the structure of the plot
-jsonstuff_start <- '[
+jsonstuff <- paste0('[
     {"xvar" : "generation",
-        "yvar" : ["'
-
-
-
-
-        meanp","meant"]
-    },
+        "yvar" : ["',names_p_str,'"]},
+    {"xvar" : "generation",
+        "yvar" : ["',names_t_str,'"]},
+    {"xvar" : "generation",
+        "yvar" : ["',names_x_str,'"]},
     {
         "xvar" : "generation",
         "yvar" : "meanv"
     },
     {
         "xvar" : "generation",
-        "yvar" : "meanx"
+        "yvar" : ["',names_var_p_str,'"]
     },
     {
         "xvar" : "generation",
-        "yvar" : ["varp","vart","varv"]
+        "yvar" : ["',names_var_t_str,'"]
+    },
+    {
+        "xvar" : "generation",
+        "yvar" : ["',names_var_x_str,'"]
+    },
+    {
+        "xvar" : "generation",
+        "yvar" : "varv"
     },
     {
         "xvar" : "generation",
@@ -112,14 +178,26 @@ jsonstuff_start <- '[
     },
     {
         "xvar" : "generation",
-        "yvar" : ["surv_f","surv_m"]
+        "yvar" : ["p_surv_f","p_surv_m"]
     },
     {
         "xvar" : "generation",
-        "yvar" : ["covtp","covtv","covpv"]
+        "yvar" : ["nfsurv","nmsurv"]
+    },
+    {
+        "xvar" : "generation",
+        "yvar" : ["',cov_tp_names_str,'"]
+    },
+    {
+        "xvar" : "generation",
+        "yvar" : ["',cov_tv_names_str,'"]
+    },
+    {
+        "xvar" : "generation",
+        "yvar" : ["',cov_pv_names_str,'"]
     }
 ]
-'
+')
 
 plot.structure <- fromJSON(jsonstuff, simplifyVector = F)
 
@@ -191,20 +269,43 @@ for (plot_struct_idx in 1:plot.structure.l)
     plot.list.idx <- plot.list.idx + 1
 }
 
+sub.data <- pivot_longer(data=data.tibble
+        ,cols=all_of(c(names_p,names_x))
+        ,names_to=c(".value","trait_idx")
+        ,names_pattern = "mean([xp])(\\d+)"
+        )
+
+(str(sub.data))
+phase_plot <- ggplot(
+        data = sub.data,
+        mapping = aes(x = p, y = x)) +
+    geom_line(mapping = aes(colour = trait_idx))
+
+
+# now a phase plot to end it all with
+plot.list[[plot.list.idx]] <- phase_plot
+
 title <- ""
 
-if (exists("params") && "sf" %in% names(params))
+if (exists("params") && "biasv" %in% names(params))
 {
     title <- paste0(
-            "survival: ",params["sf"],", toptf: ",params["toptf"])
+            "bias: ",params["biasv"],
+            " a: ",params["a"],
+            " b: ",params["b"],
+            " c: ",params["c"],
+            " theta: ",params["theta"],
+            " gamma: ",params["gamma"],
+            " weber_k: ",params["weber_k"]
+            )
 }
 
 wrap_plots(plot.list,ncol=1) + plot_annotation(
         title=title)
 
-file.name <- paste0("graph_",basename(file.name),".pdf")
+file.name.graph <- paste0("graph_",basename(file.name),".pdf")
 
-ggsave(file.name,height= 3 * plot.structure.l)
+ggsave(file.name.graph,height= 3 * plot.structure.l)
 
 
 
