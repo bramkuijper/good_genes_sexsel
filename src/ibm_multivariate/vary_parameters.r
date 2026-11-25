@@ -4,7 +4,7 @@ biasv = c(0.5, 0.95)
 
 nrep = 20
 
-maxgen = 10000
+maxgen = 50000
 
 
 # generate a date_time stamp as a character
@@ -23,20 +23,20 @@ batch_file_contents <- ""
 
 a <- 1.0
 b <- 0.0025
-c <- 0.1
+c <- 0.5
 k <- 0.0
 weber_k <- 0.0
-gamma <- 2.0
-theta <- 1.0 / gamma
+gamma <- c(1.5, 2.0, 3.0)
+theta <- c(0.1,0.5,0.9)
 ntraits <- 2
 
 init_t <- 0.0
 init_p <- 1.0
 init_v <- 5.0
 
-max_mut <- c(0.2) #c(0.05,0.1,0.2,0.3)
+max_mut <- c(0.4) #c(0.05,0.1,0.2,0.3)
 
-max_mut_v <- 0.4
+max_mut_v <- 0.8
 
 only_positive <- F
 
@@ -44,42 +44,48 @@ for (max_mut_i in max_mut)
 {
     for (rep_i in 1:nrep)
     {
-        for (biasv_i in biasv)
+        for (gamma_i in gamma)
         {
-            counter <- counter + 1
-            file_name_i <- paste0(output_file_prefix,"_",counter)
+            for (theta_i in theta)
+            {
+                for (biasv_i in biasv)
+                {
+                    counter <- counter + 1
+                    file_name_i <- paste0(output_file_prefix,"_",counter)
 
-            echo_str <- paste("echo",counter)
+                    echo_str <- paste("echo",counter)
 
-            max_mut_t <- max_mut_i
-            max_mut_p <- max_mut_i
+                    max_mut_t <- max_mut_i
+                    max_mut_p <- max_mut_i
 
-            command_str <- paste(exe,
-                            biasv_i,
-                            a,
-                            b,
-                            c,
-                            theta,
-                            gamma,
-                            k,
-                            weber_k,
-                            init_t,
-                            init_p,
-                            init_v,
-                            max_mut_t,
-                            max_mut_p,
-                            max_mut_v,
-                            format(maxgen,scientific=F),
-                            as.numeric(only_positive),
-                            ntraits,
-                            file_name_i)
+                    command_str <- paste(exe,
+                                    biasv_i,
+                                    a,
+                                    b,
+                                    c,
+                                    theta_i,
+                                    gamma_i,
+                                    k,
+                                    weber_k,
+                                    init_t,
+                                    init_p,
+                                    init_v,
+                                    max_mut_t,
+                                    max_mut_p,
+                                    max_mut_v,
+                                    format(maxgen,scientific=F),
+                                    as.numeric(only_positive),
+                                    ntraits,
+                                    file_name_i)
 
-            # append to batch file contents
-            batch_file_contents <- paste0(batch_file_contents
-                    ,"\n"
-                    ,echo_str
-                    ,"\n"
-                    ,command_str)
+                    # append to batch file contents
+                    batch_file_contents <- paste0(batch_file_contents
+                            ,"\n"
+                            ,echo_str
+                            ,"\n"
+                            ,command_str)
+                }
+            }
         }
     }
 }
