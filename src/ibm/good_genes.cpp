@@ -275,6 +275,7 @@ unsigned GoodGenes::choose(Individual const &female)
 void GoodGenes::update_survival_distribution()
 {
     std::vector<double> female_survival{}; 
+    std::vector<double> male_survival{}; 
 
     double surv;
 
