@@ -24,13 +24,12 @@ def analyze_data(lines):
 
     # loop through the lines to collect the data
     for line in lines[1:]:
-        splitline = line.split(";")[0:-1]
+        splitline = line.split(";")[0:11]
 
         for i in range(0,len(splitline)):
             data[i].append(float(splitline[i]))
 
     # now take averages
-
     avgs = []
     for i in range(0,len(data)):
         avgs.append(sum(data[i])/len(data[i]))

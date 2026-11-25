@@ -277,6 +277,7 @@ void GoodGenes::write_data()
             female_iter != females.end();
             ++female_iter)
     {
+        v = 0.5 * (female_iter->v[0] + female_iter->v[1]);
         for (unsigned trait_idx{0}; 
                 trait_idx < par.ntraits; ++trait_idx)
         {
@@ -293,7 +294,6 @@ void GoodGenes::write_data()
             stv[trait_idx] += t * v;
         }
 
-        v = 0.5 * (female_iter->v[0] + female_iter->v[1]);
         meanv += v;
         ssv += v*v;
     }
@@ -302,6 +302,7 @@ void GoodGenes::write_data()
             male_iter != males.end();
             ++male_iter)
     {
+        v = 0.5 * (male_iter->v[0] + male_iter->v[1]);
         for (unsigned trait_idx{0}; 
                 trait_idx < par.ntraits; ++trait_idx)
         {
@@ -322,7 +323,6 @@ void GoodGenes::write_data()
             stv[trait_idx] += t * v;
         }
 
-        v = 0.5 * (male_iter->v[0] + male_iter->v[1]);
         meanv += v;
         ssv += v*v;
     }
