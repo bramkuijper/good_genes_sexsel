@@ -11,19 +11,13 @@ Individual::Individual(Parameters const &params) :
     std::vector <double> ornament_vals(params.ntraits, 
             params.init_t);
     std::vector <double> preference_vals(params.ntraits, 
-            params.init_t);
+            params.init_p);
 
     // initialize vectors for t and p
     for (unsigned allele_idx{0}; allele_idx < 2; ++allele_idx)
     {
         t.push_back(ornament_vals);
         p.push_back(preference_vals);
-    }
-
-    for (unsigned trait_idx{0}; trait_idx < params.ntraits; ++trait_idx)
-    {
-        // x_i = t_i * v_i, aka a condition-dependent indicator
-        x[trait_idx] = 0.5 *  (t[0][trait_idx] + t[1][trait_idx]) * (v[0] + v[1]);
     }
 } // end Individual::Individual
 

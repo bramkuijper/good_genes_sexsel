@@ -4,7 +4,7 @@ biasv = c(0.5, 0.95)
 
 nrep = 20
 
-maxgen = 50000
+maxgen = 10000
 
 
 # generate a date_time stamp as a character
@@ -23,7 +23,7 @@ batch_file_contents <- ""
 
 a <- 1.0
 b <- 0.0025
-c <- 0.5
+c <- 0.1
 k <- 0.0
 weber_k <- 0.0
 gamma <- 2.0
@@ -34,9 +34,9 @@ init_t <- 0.0
 init_p <- 1.0
 init_v <- 5.0
 
-max_mut <- c(0.4) #c(0.05,0.1,0.2,0.3)
+max_mut <- c(0.2) #c(0.05,0.1,0.2,0.3)
 
-max_mut_v <- 0.8
+max_mut_v <- 0.4
 
 only_positive <- F
 

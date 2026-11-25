@@ -38,8 +38,6 @@ transform.sym  <- function(x)
     }
 }
 
-file.name <- "sim_good_genes_24112026_112907_99"
-
 if (!exists("file.name"))
 {
     
@@ -275,7 +273,6 @@ sub.data <- pivot_longer(data=data.tibble
         ,names_pattern = "mean([xp])(\\d+)"
         )
 
-(str(sub.data))
 phase_plot <- ggplot(
         data = sub.data,
         mapping = aes(x = p, y = x)) +

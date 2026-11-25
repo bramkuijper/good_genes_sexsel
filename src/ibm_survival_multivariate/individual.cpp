@@ -11,7 +11,7 @@ Individual::Individual(Parameters const &params) :
     std::vector <double> ornament_vals(params.ntraits, 
             params.init_t);
     std::vector <double> preference_vals(params.ntraits, 
-            params.init_t);
+            params.init_p);
 
     // initialize vectors for t and p
     for (unsigned allele_idx{0}; allele_idx < 2; ++allele_idx)

@@ -25,17 +25,20 @@ GoodGenes::GoodGenes(Parameters const &params) :
 
     // add headers to the data file
     write_data_headers();
+        
+    // set phenotypes 
+    phenotypes();
 
     for (time_step = 0; 
             time_step <= par.max_num_gen; ++time_step)
     {
 
-        // set phenotypes 
-        phenotypes();
-
         // ... then reproduce (which 
         // includes generating a survival dist)
         reproduction();
+
+        // set phenotypes 
+        phenotypes();
 
         // write data to file ever nth timestep
         if (time_step % par.numoutgen == 0)
@@ -62,6 +65,7 @@ void GoodGenes::phenotypes()
             male_iter->x[trait_idx] = ti * std::exp(-std::fabs(par.v_opt - v));
         }
     }
+
 }
 
 void GoodGenes::update_survival_distribution()
@@ -90,8 +94,11 @@ void GoodGenes::update_survival_distribution()
                 trait_idx < par.ntraits;
                 ++trait_idx)
         {
-            p = std::fabs(0.5 * (female_iter->p[0][trait_idx] + 
-                    female_iter->p[1][trait_idx]));
+            p = std::fabs(
+                    0.5 * (
+                        female_iter->p[0][trait_idx] + 
+                        female_iter->p[1][trait_idx])
+                    );
 
             sum_preference_costs += std::pow(p, theta_inv);
         }
@@ -158,6 +165,8 @@ void GoodGenes::update_survival_distribution()
 
 void GoodGenes::reproduction()
 {
+    update_survival_distribution();
+
     long unsigned female_idx,male_idx;
 
     std::vector<Individual> nextgen{};
@@ -195,7 +204,8 @@ void GoodGenes::reproduction()
     females.clear();
     males.clear();
 
-    for (unsigned newborn_idx{0}; newborn_idx < par.n; ++newborn_idx)
+    for (unsigned newborn_idx{0}; 
+            newborn_idx < par.n; ++newborn_idx)
     {
         if (uniform(rng_r) < 0.5)
         {
@@ -322,6 +332,9 @@ void GoodGenes::write_data()
         meanv += v;
         ssv += v*v;
     }
+
+    meanv /= nf_plus_nm;
+    ssv /= nf_plus_nm;
 
     for (unsigned trait_idx{0}; 
             trait_idx < par.ntraits; ++trait_idx)
