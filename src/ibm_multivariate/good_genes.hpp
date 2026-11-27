@@ -14,7 +14,7 @@ class GoodGenes
 
         std::ofstream data_file;
         std::uniform_real_distribution<double> uniform;
-        std::normal_distribution <double> normal{};
+        std::normal_distribution <double> normal{0.0, 1.0};
 
         std::discrete_distribution<unsigned> female_survival_distribution{};
         std::discrete_distribution<unsigned> male_survival_distribution{};

@@ -6,24 +6,61 @@ int main(int argc, char **argv)
 {
     Parameters parameters;
 
-    parameters.biasv = std::stod(argv[1]);
-    parameters.a = std::stod(argv[2]);
-    parameters.b = std::stod(argv[3]);
-    parameters.c = std::stod(argv[4]);
-    parameters.theta = std::stod(argv[5]);
-    parameters.gamma = std::stod(argv[6]);
-    parameters.k = std::stod(argv[7]);
-    parameters.weber_k = std::stod(argv[8]);
-    parameters.init_t = std::stod(argv[9]);
-    parameters.init_p = std::stod(argv[10]);
-    parameters.init_v = std::stod(argv[11]);
-    parameters.max_mut_t = std::stod(argv[12]);
-    parameters.max_mut_p = std::stod(argv[13]);
-    parameters.max_mut_v = std::stod(argv[14]);
-    parameters.max_num_gen = static_cast<unsigned>(std::stoi(argv[15]));
-    parameters.only_positive = std::stoi(argv[16]);
-    parameters.ntraits = static_cast<unsigned>(std::stoi(argv[17]));
-    parameters.file_name = argv[18];
+    unsigned arg_ctr{1};
+
+    parameters.biasv = std::stod(argv[arg_ctr++]);
+    parameters.a = std::stod(argv[arg_ctr++]);
+    parameters.b = std::stod(argv[arg_ctr++]);
+    parameters.c = std::stod(argv[arg_ctr++]);
+    parameters.theta = std::stod(argv[arg_ctr++]);
+    parameters.gamma = std::stod(argv[arg_ctr++]);
+    parameters.k = std::stod(argv[arg_ctr++]);
+    parameters.weber_k = std::stod(argv[arg_ctr++]);
+    parameters.init_v = std::stod(argv[arg_ctr++]);
+    parameters.max_mut_t = std::stod(argv[arg_ctr++]);
+    parameters.max_mut_p = std::stod(argv[arg_ctr++]);
+    parameters.max_mut_v = std::stod(argv[arg_ctr++]);
+    parameters.max_num_gen = static_cast<unsigned>(std::stoi(argv[arg_ctr++]));
+    parameters.only_positive = std::stoi(argv[arg_ctr++]);
+    parameters.ntraits = static_cast<unsigned>(std::stoi(argv[arg_ctr++]));
+    
+    // initialize vectors with mutation rates
+    parameters.mu_p = std::vector<double> (parameters.ntraits, 0.0);
+    parameters.mu_t = std::vector<double> (parameters.ntraits, 0.0);
+    parameters.init_p = std::vector<double> (parameters.ntraits, 0.0);
+    parameters.init_t = std::vector<double> (parameters.ntraits, 0.0);
+
+    
+    for (unsigned trait_idx{0}; 
+            trait_idx < parameters.ntraits;
+            ++trait_idx)
+    {
+        parameters.mu_p[trait_idx] = std::stod(argv[arg_ctr++]);
+    }
+        
+    for (unsigned trait_idx{0}; 
+            trait_idx < parameters.ntraits;
+            ++trait_idx)
+    {
+        parameters.mu_t[trait_idx] = std::stod(argv[arg_ctr++]);
+    }
+
+    for (unsigned trait_idx{0}; 
+            trait_idx < parameters.ntraits;
+            ++trait_idx)
+    {
+        parameters.init_p[trait_idx] = std::stod(argv[arg_ctr++]);
+    }
+
+    for (unsigned trait_idx{0}; 
+            trait_idx < parameters.ntraits;
+            ++trait_idx)
+    {
+        parameters.init_t[trait_idx] = std::stod(argv[arg_ctr++]);
+    }
+
+
+    parameters.file_name = argv[arg_ctr++];
 
     GoodGenes gg(parameters);
 

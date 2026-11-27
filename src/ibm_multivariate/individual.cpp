@@ -5,19 +5,19 @@
 
 // standard constructor
 Individual::Individual(Parameters const &params) :
+    t(2, std::vector<double> (params.ntraits, 0.0)), // initialize t at 0
+    p(2, std::vector<double> (params.ntraits, 0.0)), // initialize p at 0
     v{params.init_v, params.init_v},
     x(params.ntraits, 0.0) // initialize x at 0
 {
-    std::vector <double> ornament_vals(params.ntraits, 
-            params.init_t);
-    std::vector <double> preference_vals(params.ntraits, 
-            params.init_p);
-
     // initialize vectors for t and p
-    for (unsigned allele_idx{0}; allele_idx < 2; ++allele_idx)
+    for (unsigned trait_idx{0}; trait_idx < 2; ++trait_idx)
     {
-        t.push_back(ornament_vals);
-        p.push_back(preference_vals);
+        for (unsigned allele_idx{0}; allele_idx < 2; ++allele_idx)
+        {
+            p[allele_idx][trait_idx] = params.init_p[trait_idx];
+            t[allele_idx][trait_idx] = params.init_t[trait_idx];
+        }
     }
 } // end Individual::Individual
 
@@ -59,7 +59,7 @@ Individual::Individual(
 
         for (unsigned allele_idx{0}; allele_idx < 2; ++allele_idx)
         {
-            if (uniform(rng_r) < params.mu_p)
+            if (uniform(rng_r) < params.mu_p[trait_idx])
             {
                 incr = uniform(rng_r) * params.max_mut_p;
 
@@ -72,7 +72,7 @@ Individual::Individual(
                 }
             }
 
-            if (uniform(rng_r) < params.mu_t)
+            if (uniform(rng_r) < params.mu_t[trait_idx])
             {
                 incr = uniform(rng_r) * params.max_mut_t;
                 

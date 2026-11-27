@@ -9,9 +9,9 @@ class Parameters
         unsigned n{5000}; // population size
 
         // per-generation, per allele mutation probability of preference alleles
-        double mu_p{0.05}; 
+        std::vector <double> mu_p;
         // per-generation, per allele mutation probability of ornament alleles
-        double mu_t{0.05};
+        std::vector <double> mu_t;
         // per-generation, per allele mutation probability of viability alleles
         double mu_v{0.05};
 
@@ -64,8 +64,8 @@ class Parameters
         unsigned choice_sample_size{10};
 
         // initial values of p, t, v
-        double init_t{0.0};
-        double init_p{1.0};
+        std::vector <double> init_t;
+        std::vector <double> init_p;
         double init_v{5.0};
 
         // value of v that maximizes survival

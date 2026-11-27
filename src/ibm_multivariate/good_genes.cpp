@@ -227,9 +227,6 @@ void GoodGenes::write_parameters()
         << "type;" << "good_genes_survival" << ";" << std::endl
         << "n;" << par.n << ";" << std::endl
         << "ntraits;" << par.ntraits << ";" << std::endl
-        << "mu_p;" << par.mu_p << ";" << std::endl
-        << "mu_t;" << par.mu_t << ";" << std::endl
-        << "mu_v;" << par.mu_v << ";" << std::endl
         << "max_mut_p;" << par.max_mut_p << ";" << std::endl
         << "max_mut_t;" << par.max_mut_t << ";" << std::endl
         << "max_mut_v;" << par.max_mut_v << ";" << std::endl
@@ -242,13 +239,21 @@ void GoodGenes::write_parameters()
         << "k;" << par.k << ";" << std::endl
         << "weber_k;" << par.weber_k << ";" << std::endl
         << "choice_sample_size;" << par.choice_sample_size << ";" << std::endl
-        << "init_t;" << par.init_t << ";" << std::endl
-        << "init_p;" << par.init_p << ";" << std::endl
         << "init_v;" << par.init_v << ";" << std::endl
         << "v_opt;" << par.v_opt << ";" << std::endl
         << "only_positive;" << par.only_positive << ";" << std::endl
         << "max_num_gen;" << par.max_num_gen << ";" << std::endl
         << "numoutgen;" << par.numoutgen << ";" << std::endl;
+
+    for (unsigned trait_idx{0}; trait_idx < par.ntraits; ++trait_idx)
+    {
+        data_file << "mu_p" << (trait_idx + 1) << ";" << par.mu_p[trait_idx] << ";" << std::endl
+                << "mu_t" << (trait_idx + 1) << ";" << par.mu_t[trait_idx] << ";" << std::endl
+                << "init_p" << (trait_idx + 1) << ";" << par.init_p[trait_idx] << ";" << std::endl
+                << "init_t" << (trait_idx + 1) << ";" << par.init_t[trait_idx] << ";" << std::endl;
+    }
+
+    data_file << "mu_v;" << par.mu_v << ";" << std::endl;
 }
 
 void GoodGenes::write_data()
